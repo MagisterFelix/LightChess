@@ -1,13 +1,22 @@
-import os
 from pathlib import Path
+
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+PROJECT_DIR = BASE_DIR / "core"
 
-DEBUG = os.environ.get('DJANGO_DEBUG') == 'True'
+WEB_DIR = PROJECT_DIR / "web"
 
-ALLOWED_HOSTS = []
+SERVER_DIR = PROJECT_DIR / "server"
+
+WEB_BUILD_DIR = WEB_DIR / "build"
+
+SECRET_KEY = config("DJANGO_SECRET_KEY")
+
+DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
+
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -16,6 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "core.server",
 ]
 
 MIDDLEWARE = [
@@ -33,7 +43,9 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            WEB_BUILD_DIR,
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -57,13 +69,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
@@ -74,16 +80,24 @@ LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
 
-USE_I18N = True
+USE_I18N = False
+
+USE_L10N = False
 
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = PROJECT_DIR / "assets"
+
+STATIC_DIR = SERVER_DIR / "static"
+
+STATICFILES_DIRS = [
+    WEB_BUILD_DIR / "static",
+]
 
 STATIC_URL = "/static/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = SERVER_DIR / "media"
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
