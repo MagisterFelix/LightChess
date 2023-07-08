@@ -1,11 +1,17 @@
 $white: #fff;
 $black: #000;
+$soft_dark: #353b46;
 $dark: #282c34;
 $darker: #202329;
+$red: #ba5546;
+$almond: #f0d8bf;
 
 :export {
   white: $white;
   black: $black;
+  soft_dark: $soft_dark;
   dark: $dark;
   darker: $darker;
+  red: $red;
+  almond: $almond;
 }
